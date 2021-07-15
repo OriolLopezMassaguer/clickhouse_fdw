@@ -91,6 +91,9 @@ CustomObjectDef *chfdw_check_for_custom_function(Oid funcid)
 			case F_TIMESTAMPTZ_PART:
 			case F_ARRAY_POSITION:
 			case 868: // strpos
+			case 2750: // array overlap
+			case 2751: //array contains
+			case 2752: //array contained
 			case F_BTRIM:
 			case F_BTRIM1:
 				special_builtin = true;
@@ -370,6 +373,12 @@ CustomObjectDef *chfdw_check_for_custom_operator(Oid opoid, Form_pg_operator for
 			/* timestamptz + interval */
 			case F_TIMESTAMPTZ_PL_INTERVAL:
 				break;
+			case 2750:
+				break;
+			case 2751:
+				break;
+			case 2752:
+				break;				
 			default:
 				return NULL;
 		}
@@ -391,6 +400,12 @@ CustomObjectDef *chfdw_check_for_custom_operator(Oid opoid, Form_pg_operator for
 
 		if (opoid == F_TIMESTAMPTZ_PL_INTERVAL)
 			entry->cf_type = CF_TIMESTAMPTZ_PL_INTERVAL;
+		else if (opoid == 2750)
+				entry->cf_type = CF_ARRAY_OVERLAPS;
+		else if (opoid == 2751)
+				entry->cf_type = CF_ARRAY_CONTAINS;
+		else if (opoid == 2752)
+				entry->cf_type = CF_ARRAY_CONTAINED;
 		else
 		{
 			Oid		extoid = getExtensionOfObject(OperatorRelationId, opoid);

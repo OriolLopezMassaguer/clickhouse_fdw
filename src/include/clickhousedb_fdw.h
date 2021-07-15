@@ -278,6 +278,9 @@ typedef enum {
 	CF_AJBOOL_OUT,
 	CF_HSTORE_FETCHVAL,		/* -> operation on hstore */
 	CF_INTARRAY_IDX,
+	CF_ARRAY_CONTAINS,
+	CF_ARRAY_CONTAINED,
+	CF_ARRAY_OVERLAPS,
 	CF_CH_FUNCTION		/* adapted clickhouse function */
 } custom_object_type;
 

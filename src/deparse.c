@@ -2883,6 +2883,64 @@ deparseOpExpr(OpExpr *node, deparse_expr_cxt *context)
 				goto cleanup;
 			}
 			break;
+			case CF_ARRAY_OVERLAPS:
+			{
+				Expr *arg1 = linitial(node->args);
+				Expr *arg2 = list_nth(node->args, 1);
+				appendStringInfoString(buf, "hasAny(");
+
+				/* Deparse right operand. */
+				deparseExpr(arg1, context);
+				appendStringInfoChar(buf, ',');
+
+				/* Deparse left operand. */
+				arg1 = linitial(node->args);
+				deparseExpr(arg2, context);
+
+				/* Close function call */
+				appendStringInfoChar(buf, ')');
+
+				goto cleanup;
+			}
+			case CF_ARRAY_CONTAINS:
+			{
+				Expr *arg1 = linitial(node->args);
+				Expr *arg2 = list_nth(node->args, 1);
+				appendStringInfoString(buf, "hasAll(");
+
+				/* Deparse right operand. */
+				deparseExpr(arg1, context);
+				appendStringInfoChar(buf, ',');
+
+				/* Deparse left operand. */
+				arg1 = linitial(node->args);
+				deparseExpr(arg2, context);
+
+				/* Close function call */
+				appendStringInfoChar(buf, ')');
+
+				goto cleanup;
+			}
+			case CF_ARRAY_CONTAINED:
+			{
+				Expr *arg1 = linitial(node->args);
+				Expr *arg2 = list_nth(node->args, 1);
+				appendStringInfoString(buf, "hasAll(");
+
+				/* Deparse right operand. */
+				deparseExpr(arg2, context);
+				appendStringInfoChar(buf, ',');
+
+				/* Deparse left operand. */
+				arg1 = linitial(node->args);
+				deparseExpr(arg1, context);
+
+				/* Close function call */
+				appendStringInfoChar(buf, ')');
+
+				goto cleanup;
+			}
+			break;
 			case CF_HSTORE_FETCHVAL:
 			{
 				Expr *arg1 = linitial(node->args);
