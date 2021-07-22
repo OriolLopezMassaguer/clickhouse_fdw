@@ -2856,6 +2856,7 @@ deparseOpExpr(OpExpr *node, deparse_expr_cxt *context)
 	cdef = chfdw_check_for_custom_operator(node->opno, form);
 	if (cdef)
 	{
+		//elog(LOG,"cf_type %u",cdef->cf_type);
 		switch (cdef->cf_type)
 		{
 			case CF_AJTIME_OPERATOR:
@@ -2902,6 +2903,7 @@ deparseOpExpr(OpExpr *node, deparse_expr_cxt *context)
 
 				goto cleanup;
 			}
+			break;
 			case CF_ARRAY_CONTAINS:
 			{
 				Expr *arg1 = linitial(node->args);
@@ -2921,6 +2923,7 @@ deparseOpExpr(OpExpr *node, deparse_expr_cxt *context)
 
 				goto cleanup;
 			}
+			break;
 			case CF_ARRAY_CONTAINED:
 			{
 				Expr *arg1 = linitial(node->args);
@@ -2941,6 +2944,22 @@ deparseOpExpr(OpExpr *node, deparse_expr_cxt *context)
 				goto cleanup;
 			}
 			break;
+			// case CF_ARRAY_UNNEST:
+			// {
+			// 	Expr *arg1 = linitial(node->args);
+				
+			// 	appendStringInfoString(buf, "arrayJoin(");
+
+			// 	/* Deparse left operand. */
+			// 	arg1 = linitial(node->args);
+			// 	deparseExpr(arg1, context);
+
+			// 	/* Close function call */
+			// 	appendStringInfoChar(buf, ')');
+
+			// 	goto cleanup;
+			// }
+			//break;			
 			case CF_HSTORE_FETCHVAL:
 			{
 				Expr *arg1 = linitial(node->args);

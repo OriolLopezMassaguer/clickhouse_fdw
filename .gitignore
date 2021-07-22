@@ -6,4 +6,4 @@ bench/bench
 compile_commands.json
 .clangd
 .cache
-/bu
+build/*

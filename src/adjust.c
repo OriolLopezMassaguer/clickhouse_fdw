@@ -81,6 +81,7 @@ CustomObjectDef *chfdw_check_for_custom_function(Oid funcid)
 
 	if (chfdw_is_builtin(funcid))
 	{
+		//elog(LOG, "funcid %u", funcid);
 		switch (funcid)
 		{
 			case F_TIMESTAMP_TRUNC:
@@ -94,11 +95,13 @@ CustomObjectDef *chfdw_check_for_custom_function(Oid funcid)
 			case 2750: // array overlap
 			case 2751: //array contains
 			case 2752: //array contained
+			case F_ARRAY_UNNEST: //array unnest
 			case F_BTRIM:
 			case F_BTRIM1:
 				special_builtin = true;
 				break;
 			default:
+				elog(LOG, "funcid not found %u", funcid);
 				return NULL;
 		}
 	}
@@ -154,6 +157,11 @@ CustomObjectDef *chfdw_check_for_custom_function(Oid funcid)
 			case 868:
 			{
 				strcpy(entry->custom_name, "position");
+				break;
+			}
+			case F_ARRAY_UNNEST:
+			{
+				strcpy(entry->custom_name, "arrayJoin");
 				break;
 			}
 		}
@@ -369,6 +377,7 @@ CustomObjectDef *chfdw_check_for_custom_operator(Oid opoid, Form_pg_operator for
 
 	if (chfdw_is_builtin(opoid))
 	{
+		elog(LOG,"opoid %u",opoid);
 		switch (opoid) {
 			/* timestamptz + interval */
 			case F_TIMESTAMPTZ_PL_INTERVAL:
@@ -379,6 +388,8 @@ CustomObjectDef *chfdw_check_for_custom_operator(Oid opoid, Form_pg_operator for
 				break;
 			case 2752:
 				break;				
+			case F_ARRAY_UNNEST:
+				break;
 			default:
 				return NULL;
 		}
@@ -406,6 +417,8 @@ CustomObjectDef *chfdw_check_for_custom_operator(Oid opoid, Form_pg_operator for
 				entry->cf_type = CF_ARRAY_CONTAINS;
 		else if (opoid == 2752)
 				entry->cf_type = CF_ARRAY_CONTAINED;
+		else if (opoid == F_ARRAY_UNNEST)
+				entry->cf_type = CF_ARRAY_UNNEST;				
 		else
 		{
 			Oid		extoid = getExtensionOfObject(OperatorRelationId, opoid);

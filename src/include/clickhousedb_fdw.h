@@ -281,6 +281,7 @@ typedef enum {
 	CF_ARRAY_CONTAINS,
 	CF_ARRAY_CONTAINED,
 	CF_ARRAY_OVERLAPS,
+	CF_ARRAY_UNNEST,
 	CF_CH_FUNCTION		/* adapted clickhouse function */
 } custom_object_type;
 
